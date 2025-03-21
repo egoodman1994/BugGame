@@ -1,4 +1,19 @@
+import os
+import sys
 import pygame
+
+def get_resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    # Make sure to handle the assets directory correctly
+    if relative_path.startswith("assets/"):
+        return os.path.join(base_path, relative_path)
+    return os.path.join(base_path, "assets", relative_path)
 
 def clean_sprite_edges(surface):
     """Remove any remaining border artifacts from PNG sprites."""
@@ -23,20 +38,11 @@ def clean_sprite_edges(surface):
     del pixels  # Release the surface lock
     return cleaned
 
-def load_and_clean_sprite(path, size=None):
-    """Load a sprite, clean its edges, and optionally resize it."""
+def load_and_clean_sprite(image_path, size):
     try:
-        # Load image with alpha channel
-        image = pygame.image.load(path).convert_alpha()
-        
-        # Clean edges
-        image = clean_sprite_edges(image)
-        
-        # Resize if size is specified
-        if size:
-            image = pygame.transform.scale(image, size)
-            
-        return image
-    except:
-        print(f"Could not load image: {path}")
+        path = get_resource_path(f"images/{image_path}")
+        image = pygame.image.load(path)
+        return pygame.transform.scale(image, size)
+    except Exception as e:
+        print(f"Error loading image {image_path}: {e}")
         return None 

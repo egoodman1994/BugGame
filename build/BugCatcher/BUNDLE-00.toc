@@ -1,0 +1,3 @@
+([('BugCatcher',
+   '/Users/ericgoodman/Repo/bugCatcherGame/dist/BugCatcher',
+   'EXECUTABLE')],)
