@@ -1,0 +1,29 @@
+bug-catcher-game/
+├── assets/
+│   └── images/
+│       ├── player.png        # Renamed from cat.png
+│       ├── bug.png
+│       ├── golden.png
+│       ├── power.png
+│       └── background.png
+├── src/
+│   ├── __init__.py
+│   ├── game.py
+│   └── sprites/
+│       ├── player.py         # Renamed from cat.py if it existed
+│       └── bug.py
+├── tests/
+│   ├── __init__.py
+│   ├── test_player.py
+│   ├── test_bug.py
+│   ├── test_game.py
+│   └── test_leaderboard.py
+├── requirements.txt
+├── package.json
+├── README.md
+└── bug-catcher.py           # Renamed from bug-catching-cat.py
+├── utils/
+│   ├── __init__.py
+│   ├── constants.py
+│   └── leaderboard.py
+├── leaderboard.json       # New file (will be created automatically)

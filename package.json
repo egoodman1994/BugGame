@@ -1,0 +1,18 @@
+{
+  "name": "bug-catcher-game",
+  "version": "1.0.0",
+  "description": "A fun PyGame where you control a player trying to catch different types of bugs",
+  "main": "main.py",
+  "scripts": {
+    "start": ". venv/bin/activate && python3 main.py",
+    "setup": "python3 -m venv venv && . venv/bin/activate && python3 -m pip install -r requirements.txt",
+    "setup-win": "python3 -m venv venv && .\\venv\\Scripts\\activate && python3 -m pip install -r requirements.txt",
+    "test": ". venv/bin/activate && python3 -m pytest tests/"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=14.0.0",
+    "python": ">=3.7.0"
+  }
+} 

@@ -1,0 +1,1 @@
+Add cat.png here if you have one, otherwise the game will create a simple shape for the cat. 

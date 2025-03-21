@@ -1,0 +1,7 @@
+assets/
+└── images/
+    ├── background.png  # Your background image
+    ├── cat.png        # Your cat sprite
+    ├── bug.png        # Optional: replace basic bug shape
+    ├── golden.png     # Optional: golden bug sprite
+    └── power.png      # Optional: power bug sprite 

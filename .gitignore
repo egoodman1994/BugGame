@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Game specific
+leaderboard.json
+
+# Node
+node_modules/
+npm-debug.log*
+
+# OS specific
+.DS_Store
+Thumbs.db 
