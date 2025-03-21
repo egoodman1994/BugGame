@@ -13,8 +13,6 @@ from .utils.constants import (WIDTH, HEIGHT, FPS, WHITE, BLACK, BLUE, GOLD,
                             GOLDEN_BUG_MIN_SPAWN_TIME, GOLDEN_BUG_MAX_SPAWN_TIME,
                             NORMAL_BUG_POINTS_THRESHOLD, NORMAL_BUG_MAX_COUNT)
 from .utils.leaderboard import save_score, get_top_scores, is_high_score
-import os
-import sys
 
 class Game:
     def __init__(self):
@@ -56,26 +54,13 @@ class Game:
         self.golden_bug_active = False
         self.normal_bugs = []  # List to hold normal bugs
 
-    def resource_path(self, relative_path):
-        """ Get absolute path to resource, works for dev and for PyInstaller """
-        try:
-            # PyInstaller creates a temp folder and stores path in _MEIPASS
-            base_path = sys._MEIPASS
-        except Exception:
-            base_path = os.path.abspath(".")
-
-        # Make sure to handle the assets directory correctly
-        if relative_path.startswith("assets/"):
-            return os.path.join(base_path, relative_path)
-        return os.path.join(base_path, "assets", relative_path)
-
     def load_background(self):
         try:
-            # Use resource_path for loading assets
-            path = self.resource_path("images/background.png")
-            self.background = pygame.image.load(path)
+            # Load and scale background
+            self.background = pygame.image.load("assets/images/background.png")
             self.background = pygame.transform.scale(self.background, (BACKGROUND_WIDTH, BACKGROUND_HEIGHT))
         except:
+            # If no background image, use solid color
             self.background = pygame.Surface((WIDTH, HEIGHT))
             self.background.fill(WHITE)
 

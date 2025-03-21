@@ -17,7 +17,11 @@ class Player(pygame.sprite.Sprite):
 
     def load_image(self):
         try:
-            self.image = load_and_clean_sprite("player.png", (PLAYER_SIZE_WIDTH, PLAYER_SIZE_HEIGHT))
+            # Load and clean image
+            self.image = load_and_clean_sprite(
+                "assets/images/player.png",
+                (PLAYER_SIZE_WIDTH, PLAYER_SIZE_HEIGHT)
+            )
             if self.image:
                 self.image = pygame.transform.flip(self.image, True, False)
             else:

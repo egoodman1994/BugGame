@@ -30,14 +30,30 @@ class Bug(pygame.sprite.Sprite):
             self.change_interval = random.randint(60, 120)
         
         # Try to load images with transparency
-        self.load_image()
+        try:
+            image_path = f"assets/images/{bug_type}.png" if bug_type != "normal" else "assets/images/bug.png"
+            self.image = load_and_clean_sprite(image_path, (BUG_SIZE, BUG_SIZE))
+            
+            if not self.image:
+                raise Exception("Image loading failed")
+                
+        except:
+            # Fall back to the original shape creation if image loading fails
+            if bug_type == "black":
+                self.image = self.create_bug_surface(BLACK)
+            elif bug_type == "golden":
+                self.image = self.create_bug_surface(GOLD)
+            elif bug_type == "power":
+                self.image = self.create_bug_surface(BLUE)
+            else:
+                self.image = self.create_bug_surface(GREEN)
         
         self.rect = self.image.get_rect()
         self.reset_position()
         self.angle = random.uniform(0, 2 * math.pi)
         self.movement_timer = 0
 
-    def create_bug_surface(self):
+    def create_bug_surface(self, color):
         # Create a surface with alpha channel for smooth edges
         surface = pygame.Surface((BUG_SIZE, BUG_SIZE), pygame.SRCALPHA)
         
@@ -48,14 +64,14 @@ class Bug(pygame.sprite.Sprite):
         wing_height = BUG_SIZE//3
         
         # Draw main body (circle)
-        pygame.draw.circle(surface, self.color, center, body_radius - 1)  # -1 for smoother edge
+        pygame.draw.circle(surface, color, center, body_radius - 1)  # -1 for smoother edge
         
         # Draw wings with more rounded edges
         left_wing = pygame.Rect(0, BUG_SIZE//4, wing_width, wing_height)
         right_wing = pygame.Rect(BUG_SIZE//2, BUG_SIZE//4, wing_width, wing_height)
         
         # Darker color for wings
-        wing_color = (self.color[0]//2, self.color[1]//2, self.color[2]//2)
+        wing_color = (color[0]//2, color[1]//2, color[2]//2)
         
         # Draw elliptical wings
         pygame.draw.ellipse(surface, wing_color, left_wing)
@@ -64,9 +80,9 @@ class Bug(pygame.sprite.Sprite):
         # Add highlights for depth
         highlight_radius = 2
         highlight_pos = (center[0] - body_radius//3, center[1] - body_radius//3)
-        highlight_color = (min(self.color[0] + 50, 255), 
-                          min(self.color[1] + 50, 255), 
-                          min(self.color[2] + 50, 255))
+        highlight_color = (min(color[0] + 50, 255), 
+                          min(color[1] + 50, 255), 
+                          min(color[2] + 50, 255))
         pygame.draw.circle(surface, highlight_color, highlight_pos, highlight_radius)
         
         return surface
@@ -92,22 +108,4 @@ class Bug(pygame.sprite.Sprite):
             self.rect.y = max(0, min(self.rect.y, HEIGHT - BUG_SIZE))
 
     def draw(self, screen):
-        screen.blit(self.image, self.rect)
-
-    def load_image(self):
-        try:
-            image_paths = {
-                "normal": "bug.png",
-                "golden": "golden.png",
-                "power": "power.png",
-                "black": "black.png"
-            }
-            
-            image_path = image_paths.get(self.bug_type, "bug.png")
-            self.image = load_and_clean_sprite(image_path, (BUG_SIZE, BUG_SIZE))
-            
-            if not self.image:
-                raise Exception("Image loading failed")
-        except:
-            print(f"Could not load {self.bug_type} bug image, using default shape")
-            self.image = self.create_bug_surface() 
+        screen.blit(self.image, self.rect) 
