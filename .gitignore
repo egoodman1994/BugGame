@@ -16,6 +16,11 @@ ENV/
 # Game specific
 leaderboard.json
 
+# Build files
+build/
+dist/
+*.spec
+
 # Node
 node_modules/
 npm-debug.log*
