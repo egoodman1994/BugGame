@@ -7,7 +7,7 @@ FPS = 60
 PLAYER_SIZE_WIDTH = 100
 PLAYER_SIZE_HEIGHT = 60
 BUG_SIZE = 20
-BASE_PLAYER_SPEED = 5
+BASE_PLAYER_SPEED = 3.5  # Reduced from 5 for more controlled movement
 BOOSTED_PLAYER_SPEED = 3.9  # Reduced from 6.5 (40% slower)
 NORMAL_BUG_SPEED = 3
 GOLDEN_BUG_SPEED = 5
@@ -37,9 +37,8 @@ SPEED_THRESHOLD_2 = 50
 SPEED_THRESHOLD_3 = 100
 SPEED_THRESHOLD_4 = 150
 
-# Speed boost multiplier - set to 1.7 for better control while still providing
-# a meaningful speed advantage. Previous value of 2.0 was too difficult to control.
-SPEED_MULTIPLIER = 1.7
+# Speed boost multiplier - doubles player speed for significant advantage
+SPEED_MULTIPLIER = 2.0
 
 # Add with other bug constants
 BLACK_BUG_SPEED = 4

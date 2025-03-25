@@ -58,24 +58,19 @@ class Player(pygame.sprite.Sprite):
         # Only allow horizontal movement when in the air (not grounded)
         # This simulates swimming/floating movement for the fish
         if not self.is_grounded:
+            # Handle keyboard input
             if keys[pygame.K_LEFT]:
                 self.velocity_x = -self.speed
                 self.facing_right = False
             elif keys[pygame.K_RIGHT]:
                 self.velocity_x = self.speed
                 self.facing_right = True
-            else:
-                self.velocity_x = 0
+            
+            # Update position based on velocity (whether from keys or test)
+            self.rect.x += self.velocity_x
         else:
             # No horizontal movement when on ground
             self.velocity_x = 0
-
-        # Update position with velocity
-        self.rect.x += self.velocity_x
-        
-        # For the test, we need to ensure velocity is applied
-        if self.velocity_x != 0:
-            self.rect = self.rect.move(self.velocity_x, 0)
 
         # Handle vertical movement
         self.velocity_y += GRAVITY

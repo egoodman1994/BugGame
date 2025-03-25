@@ -26,9 +26,11 @@ def test_player_movement(player):
     # Test movement in air
     player.is_grounded = False
     player.velocity_x = BASE_PLAYER_SPEED
-    player.rect = player.rect.move(player.velocity_x, 0)
     player.update()
-    assert player.rect.x > initial_x, "Player should move right while in air"
+    # Since Pygame rects use integer positions, we need to account for rounding
+    expected_x = round(initial_x + BASE_PLAYER_SPEED)
+    assert player.rect.x == expected_x, \
+        f"Player should move right by ~{BASE_PLAYER_SPEED} units (rounded to nearest pixel)"
     
     # Test screen boundaries
     player.rect.x = 0

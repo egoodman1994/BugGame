@@ -71,10 +71,9 @@ def test_power_ups(game):
     game.handle_other_collisions()
     
     # Check that speed is increased by the correct multiplier
-    assert game.player.speed == pytest.approx(initial_speed * SPEED_MULTIPLIER), \
-        "Speed boost should multiply player speed by SPEED_MULTIPLIER (1.7)"
-    assert game.speed_boost_timer == SPEED_POWER_DURATION, \
-        "Speed boost timer should be set to SPEED_POWER_DURATION"
+    assert game.player.speed == pytest.approx(BASE_PLAYER_SPEED * 2.0), \
+        f"Speed boost should be {BASE_PLAYER_SPEED * 2.0} (double the base speed)"
+    assert game.speed_boost_timer == SPEED_POWER_DURATION
 
 def test_game_over(game):
     """Test game over conditions"""
