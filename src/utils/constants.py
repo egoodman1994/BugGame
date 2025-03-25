@@ -54,4 +54,12 @@ GOLDEN_BUG_MAX_SPAWN_TIME = 20 * 60  # Maximum 20 seconds between spawns
 
 # Regular bug spawn settings
 NORMAL_BUG_POINTS_THRESHOLD = 10  # Points needed for additional bug
-NORMAL_BUG_MAX_COUNT = 10  # Maximum number of normal bugs allowed 
+NORMAL_BUG_MAX_COUNT = 10  # Maximum number of normal bugs allowed
+MAX_BLACK_BUGS = 5  # Maximum number of black bugs allowed
+BUG_CLEANUP_THRESHOLD = WIDTH + 100  # Distance beyond which bugs are removed
+PERFORMANCE_CHECK_INTERVAL = 60  # Frames between performance checks
+
+# Bug spawn settings
+NORMAL_BUG_MAX_COUNT = 10
+BUG_CLEANUP_THRESHOLD = WIDTH + 100  # Distance beyond which bugs are removed
+PERFORMANCE_CHECK_INTERVAL = 60  # Frames between performance checks 

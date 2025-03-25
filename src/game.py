@@ -11,7 +11,8 @@ from .utils.constants import (WIDTH, HEIGHT, FPS, WHITE, BLACK, BLUE, GOLD,
                             GOLDEN_POWER_DURATION, SPEED_POWER_DURATION,
                             POWER_BUG_MIN_SPAWN_TIME, POWER_BUG_MAX_SPAWN_TIME,
                             GOLDEN_BUG_MIN_SPAWN_TIME, GOLDEN_BUG_MAX_SPAWN_TIME,
-                            NORMAL_BUG_POINTS_THRESHOLD, NORMAL_BUG_MAX_COUNT)
+                            NORMAL_BUG_POINTS_THRESHOLD, NORMAL_BUG_MAX_COUNT,
+                            MAX_BLACK_BUGS, BUG_CLEANUP_THRESHOLD, PERFORMANCE_CHECK_INTERVAL)
 from .utils.leaderboard import save_score, get_top_scores, is_high_score
 import os
 import sys
@@ -167,16 +168,23 @@ class Game:
     def update_black_bugs(self):
         # Only proceed if score is at or above threshold
         if self.score < BLACK_BUG_SPAWN_THRESHOLD:
-            self.black_bugs = []  # Clear any existing black bugs
+            self.black_bugs = []
             return
             
         # Calculate how many black bugs should be active
-        expected_black_bugs = max(0, self.score - BLACK_BUG_SPAWN_THRESHOLD) // BLACK_BUG_SPAWN_INTERVAL + 1
+        expected_black_bugs = min(
+            MAX_BLACK_BUGS,
+            max(0, self.score - BLACK_BUG_SPAWN_THRESHOLD) // BLACK_BUG_SPAWN_INTERVAL + 1
+        )
+        
+        # Clean up off-screen bugs
+        self.black_bugs = [bug for bug in self.black_bugs 
+                          if abs(bug.rect.x - WIDTH/2) < BUG_CLEANUP_THRESHOLD]
         
         # Add new black bugs if needed
         while len(self.black_bugs) < expected_black_bugs:
             self.black_bugs.append(Bug("black"))
-
+            
         # Update existing black bugs
         for bug in self.black_bugs:
             bug.speed = BLACK_BUG_SPEED * self.current_speed_multiplier
@@ -194,6 +202,22 @@ class Game:
         for bug in self.normal_bugs:
             bug.update()
 
+    def manage_performance(self):
+        """Manage game performance by cleaning up and limiting entities"""
+        # Clean up off-screen bugs
+        self.normal_bugs = [bug for bug in self.normal_bugs 
+                           if abs(bug.rect.x - WIDTH/2) < BUG_CLEANUP_THRESHOLD]
+        
+        # Ensure bug counts don't exceed limits
+        if len(self.normal_bugs) > NORMAL_BUG_MAX_COUNT:
+            self.normal_bugs = self.normal_bugs[:NORMAL_BUG_MAX_COUNT]
+        
+        # Clean up power/golden bugs if they're way off screen
+        if self.power_bug and abs(self.power_bug.rect.x - WIDTH/2) > BUG_CLEANUP_THRESHOLD:
+            self.power_bug_active = False
+        if self.golden_bug and abs(self.golden_bug.rect.x - WIDTH/2) > BUG_CLEANUP_THRESHOLD:
+            self.golden_bug_active = False
+
     def update(self):
         if not self.game_started:
             return
@@ -202,6 +226,10 @@ class Game:
         if self.game_over or self.entering_name:
             self.handle_game_over_state()
             return
+
+        # Periodically check performance
+        if pygame.time.get_ticks() % PERFORMANCE_CHECK_INTERVAL == 0:
+            self.manage_performance()
 
         # Rest of normal game update...
         self.handle_normal_game_update()

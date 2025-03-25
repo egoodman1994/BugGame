@@ -3,7 +3,7 @@ import pygame
 from src.game import Game
 from src.sprites.bug import Bug
 from src.utils.constants import (SPEED_POWER_DURATION, GOLDEN_POWER_DURATION,
-                               WIDTH, HEIGHT, BLACK_BUG_SPAWN_THRESHOLD, SPEED_MULTIPLIER, BASE_PLAYER_SPEED)
+                               WIDTH, HEIGHT, BLACK_BUG_SPAWN_THRESHOLD, SPEED_MULTIPLIER, BASE_PLAYER_SPEED, NORMAL_BUG_MAX_COUNT, MAX_BLACK_BUGS, BLACK_BUG_SPEED)
 
 @pytest.fixture
 def game():
@@ -89,3 +89,52 @@ def test_game_over(game):
     game.handle_black_bug_collisions()
     
     assert game.entering_name or game.game_over 
+
+def test_bug_load_performance(game):
+    """Test game performance with maximum bug load"""
+    # Set up initial conditions
+    game.game_started = True
+    game.score = 1000  # High score to trigger many bugs
+    
+    # Track initial bug counts
+    initial_normal_bugs = len(game.normal_bugs)
+    initial_black_bugs = len(game.black_bugs)
+    
+    # Update multiple times to stress test
+    for _ in range(60):  # Simulate 1 second of gameplay
+        game.update_normal_bugs()
+        game.update_black_bugs()
+        
+        # Assert bug counts don't exceed safe limits
+        assert len(game.normal_bugs) <= NORMAL_BUG_MAX_COUNT, "Too many normal bugs spawned"
+        assert len(game.black_bugs) <= MAX_BLACK_BUGS, "Too many black bugs spawned"
+        
+        # Test that bugs are being properly cleaned up
+        assert all(0 <= bug.rect.x <= WIDTH for bug in game.normal_bugs), "Bugs outside screen bounds"
+        assert all(0 <= bug.rect.x <= WIDTH for bug in game.black_bugs), "Black bugs outside screen bounds"
+
+def test_black_bug_movement(game):
+    """Test that black bugs move after spawning"""
+    # Set up conditions for black bug spawn
+    game.score = BLACK_BUG_SPAWN_THRESHOLD
+    game.update_black_bugs()
+    
+    # Verify we have at least one black bug
+    assert len(game.black_bugs) > 0, "Black bug should spawn at threshold"
+    
+    # Record initial position
+    bug = game.black_bugs[0]
+    initial_x = bug.rect.x
+    initial_y = bug.rect.y
+    
+    # Update and verify movement
+    game.update_black_bugs()
+    
+    # Bug should have moved
+    assert (bug.rect.x != initial_x or bug.rect.y != initial_y), \
+        "Black bug should move after spawning"
+    
+    # Verify speed is correctly set
+    expected_speed = BLACK_BUG_SPEED * game.current_speed_multiplier
+    assert bug.speed == expected_speed, \
+        f"Black bug speed should be {expected_speed} (base * multiplier)" 
