@@ -69,12 +69,12 @@ If you encounter any issues:
 
 ### Controls:
 - **←/→ Arrow Keys**: Move left/right
-- **Spacebar**: Jump
+- **Spacebar**: Jump(Swim)
 - **Close Window**: Quit game
 
 ### Movement Mechanics:
 - The fish can only move left/right while in the air
-- Jump to start swimming/moving
+- Jump(Swim) to start swimming/moving
 - This creates a fluid, swimming-like motion
 - Must jump off the ground to initiate movement
 
@@ -122,10 +122,9 @@ If you encounter issues:
 
 ## 🎮 Tips
 
-1. Use double jumps to reach high-flying bugs
-2. Prioritize golden bugs for quick score increases
-3. Use speed boosts strategically
-4. Watch for increasing difficulty as your score grows
+1. Prioritize golden bugs for quick score increases
+2. Use speed boosts strategically
+3. Watch for increasing difficulty as your score grows
 
 ## Testing
 
