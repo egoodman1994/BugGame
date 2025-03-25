@@ -121,4 +121,28 @@ If you encounter issues:
 3. Use speed boosts strategically
 4. Watch for increasing difficulty as your score grows
 
+## Testing
+
+The game includes a comprehensive test suite using pytest. To run the tests:
+
+```bash
+# Run all tests
+npm run test
+```
+
+### Test Coverage
+- Player movement and collision detection
+- Bug behavior and spawning mechanics
+- Game state management
+- Power-up system
+- Score tracking and leaderboard
+
+## Building Executable
+
+To create a standalone executable:
+```bash
+npm run build  # For Unix/Mac
+npm run build-win  # For Windows
+```
+
 Enjoy playing! 🎮✨ 
