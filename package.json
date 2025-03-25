@@ -8,6 +8,7 @@
     "setup": "python3 -m venv venv && . venv/bin/activate && python3 -m pip install -r requirements.txt",
     "setup-win": "python3 -m venv venv && .\\venv\\Scripts\\activate && python3 -m pip install -r requirements.txt",
     "test": ". venv/bin/activate && python3 -m pytest tests/",
+    "test-cov": ". venv/bin/activate && python3 -m pytest --cov=src tests/",
     "build": ". venv/bin/activate && python3 build.py",
     "build-win": ".\\venv\\Scripts\\activate && python3 build.py"
   },
