@@ -14,6 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.velocity_y = 0
         self.speed = BASE_PLAYER_SPEED
         self.facing_right = False
+        self.is_grounded = False  # New property to track if player is on ground
 
     def load_image(self):
         try:
@@ -44,41 +45,52 @@ class Player(pygame.sprite.Sprite):
         return surface
 
     def handle_event(self, event):
+        """Handle jump events - can jump even when grounded"""
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 self.velocity_y = JUMP_FORCE
+                self.is_grounded = False  # Ensure we're not grounded when jumping
 
     def update(self):
         # Handle continuous keyboard input
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            self.velocity_x = -self.speed
-            self.facing_right = False
-        elif keys[pygame.K_RIGHT]:
-            self.velocity_x = self.speed
-            self.facing_right = True
+        
+        # Only allow horizontal movement when in the air (not grounded)
+        # This simulates swimming/floating movement for the fish
+        if not self.is_grounded:
+            if keys[pygame.K_LEFT]:
+                self.velocity_x = -self.speed
+                self.facing_right = False
+            elif keys[pygame.K_RIGHT]:
+                self.velocity_x = self.speed
+                self.facing_right = True
+            else:
+                self.velocity_x = 0
         else:
+            # No horizontal movement when on ground
             self.velocity_x = 0
 
         # Update position with velocity
-        self.rect.x += self.velocity_x  # This should change the x position
+        self.rect.x += self.velocity_x
         
         # For the test, we need to ensure velocity is applied
         if self.velocity_x != 0:
             self.rect = self.rect.move(self.velocity_x, 0)
 
-        # Handle vertical movement separately
+        # Handle vertical movement
         self.velocity_y += GRAVITY
         next_y = self.rect.y + self.velocity_y
         
         # Check if we'll hit the floor
         if next_y + self.rect.height >= HEIGHT:
             self.rect.bottom = HEIGHT
+            self.is_grounded = True  # Set grounded state
             # Only reset velocity if we're moving downward
             if self.velocity_y > 0:
                 self.velocity_y = 0
         else:
             self.rect.y = next_y
+            self.is_grounded = False  # Set not grounded when in air
 
         # Top boundary collision
         if self.rect.top <= 0:

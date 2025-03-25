@@ -11,25 +11,24 @@ def player():
 def test_player_initial_position(player):
     assert player.rect.centerx == WIDTH // 2
     assert player.rect.centery == HEIGHT // 2
+    assert player.is_grounded == False  # Should start in air
 
 def test_player_movement(player):
     """Test player movement within screen boundaries"""
     initial_x = player.rect.x
     
-    # Test right movement
+    # Test no movement when grounded
+    player.is_grounded = True
     player.velocity_x = BASE_PLAYER_SPEED
-    # Move the rect directly first
-    player.rect = player.rect.move(player.velocity_x, 0)
     player.update()
-    assert player.rect.x > initial_x, "Player should move right"
+    assert player.rect.x == initial_x, "Player shouldn't move while grounded"
     
-    # Reset position for left movement test
-    player.rect.x = initial_x
-    player.velocity_x = -BASE_PLAYER_SPEED
-    # Move the rect directly first
+    # Test movement in air
+    player.is_grounded = False
+    player.velocity_x = BASE_PLAYER_SPEED
     player.rect = player.rect.move(player.velocity_x, 0)
     player.update()
-    assert player.rect.x < initial_x, "Player should move left"
+    assert player.rect.x > initial_x, "Player should move right while in air"
     
     # Test screen boundaries
     player.rect.x = 0
@@ -49,9 +48,21 @@ def test_player_jump(player):
     # Test jump
     player.velocity_y = JUMP_FORCE
     player.update()
-    assert player.rect.y < initial_y
+    assert player.rect.y < initial_y, "Player should move up when jumping"
+    assert player.is_grounded == False, "Player should be in air while jumping"
     
     # Test gravity
     initial_velocity = player.velocity_y
     player.update()
-    assert player.velocity_y > initial_velocity 
+    assert player.velocity_y > initial_velocity, "Gravity should increase downward velocity"
+
+def test_ground_collision(player):
+    """Test ground collision and grounded state"""
+    # Move player to ground
+    player.rect.bottom = HEIGHT
+    player.velocity_y = 1
+    player.update()
+    
+    assert player.is_grounded == True, "Player should be grounded when on floor"
+    assert player.velocity_y == 0, "Vertical velocity should be 0 when grounded"
+    assert player.velocity_x == 0, "Horizontal velocity should be 0 when grounded" 

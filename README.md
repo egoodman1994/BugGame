@@ -69,8 +69,14 @@ If you encounter any issues:
 
 ### Controls:
 - **←/→ Arrow Keys**: Move left/right
-- **Spacebar**: Jump (can jump twice!)
+- **Spacebar**: Jump
 - **Close Window**: Quit game
+
+### Movement Mechanics:
+- The fish can only move left/right while in the air
+- Jump to start swimming/moving
+- This creates a fluid, swimming-like motion
+- Must jump off the ground to initiate movement
 
 ### Scoring:
 - Catch green bugs for 1 point

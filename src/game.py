@@ -6,7 +6,7 @@ from .utils.constants import (WIDTH, HEIGHT, FPS, WHITE, BLACK, BLUE, GOLD,
                             POWER_UP_DURATION, BACKGROUND_WIDTH, BACKGROUND_HEIGHT,
                             SPEED_THRESHOLD_1, SPEED_THRESHOLD_2, SPEED_THRESHOLD_3, SPEED_THRESHOLD_4,
                             NORMAL_BUG_SPEED, GOLDEN_BUG_SPEED, POWER_BUG_SPEED,
-                            SPEED_MULTIPLIER_1, SPEED_MULTIPLIER_2, SPEED_MULTIPLIER_3, SPEED_MULTIPLIER_4,
+                            SPEED_MULTIPLIER, BASE_PLAYER_SPEED,
                             BLACK_BUG_SPEED, BLACK_BUG_SPAWN_THRESHOLD, BLACK_BUG_SPAWN_INTERVAL,
                             GOLDEN_POWER_DURATION, SPEED_POWER_DURATION,
                             POWER_BUG_MIN_SPAWN_TIME, POWER_BUG_MAX_SPAWN_TIME,
@@ -127,16 +127,16 @@ class Game:
     def update_speed_multiplier(self):
         # Check if we've reached a new threshold
         if (self.score >= SPEED_THRESHOLD_4 and self.last_threshold_reached < SPEED_THRESHOLD_4):
-            self.current_speed_multiplier = SPEED_MULTIPLIER_4
+            self.current_speed_multiplier = 2.0
             self.last_threshold_reached = SPEED_THRESHOLD_4
         elif (self.score >= SPEED_THRESHOLD_3 and self.last_threshold_reached < SPEED_THRESHOLD_3):
-            self.current_speed_multiplier = SPEED_MULTIPLIER_3
+            self.current_speed_multiplier = 1.8
             self.last_threshold_reached = SPEED_THRESHOLD_3
         elif (self.score >= SPEED_THRESHOLD_2 and self.last_threshold_reached < SPEED_THRESHOLD_2):
-            self.current_speed_multiplier = SPEED_MULTIPLIER_2
+            self.current_speed_multiplier = 1.5
             self.last_threshold_reached = SPEED_THRESHOLD_2
         elif (self.score >= SPEED_THRESHOLD_1 and self.last_threshold_reached < SPEED_THRESHOLD_1):
-            self.current_speed_multiplier = SPEED_MULTIPLIER_1
+            self.current_speed_multiplier = 1.2
             self.last_threshold_reached = SPEED_THRESHOLD_1
 
     def reset_game(self):
@@ -215,9 +215,9 @@ class Game:
         # Update power-up timers
         if self.speed_boost_timer > 0:
             self.speed_boost_timer -= 1
-            self.player.speed = 8  # BOOSTED_PLAYER_SPEED
+            self.player.speed = BASE_PLAYER_SPEED * SPEED_MULTIPLIER  # Apply speed multiplier
             if self.speed_boost_timer == 0:
-                self.player.speed = 5  # BASE_PLAYER_SPEED
+                self.player.speed = BASE_PLAYER_SPEED
 
         if self.golden_power_timer > 0:
             self.golden_power_timer -= 1
@@ -297,6 +297,7 @@ class Game:
 
         if self.power_bug_active and self.player.rect.colliderect(self.power_bug.rect):
             self.speed_boost_timer = SPEED_POWER_DURATION
+            self.player.speed = BASE_PLAYER_SPEED * SPEED_MULTIPLIER  # Set speed immediately
             self.power_bug_active = False
             self.power_bug_timer = random.randint(POWER_BUG_MIN_SPAWN_TIME, POWER_BUG_MAX_SPAWN_TIME)
 

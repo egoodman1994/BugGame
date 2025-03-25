@@ -7,18 +7,18 @@ FPS = 60
 PLAYER_SIZE_WIDTH = 100
 PLAYER_SIZE_HEIGHT = 60
 BUG_SIZE = 20
-BASE_PLAYER_SPEED = 3  # Reduced from 5 (40% slower)
+BASE_PLAYER_SPEED = 5
 BOOSTED_PLAYER_SPEED = 3.9  # Reduced from 6.5 (40% slower)
 NORMAL_BUG_SPEED = 3
 GOLDEN_BUG_SPEED = 5
 POWER_BUG_SPEED = 4
-GRAVITY = 0.238
+GRAVITY = 0.5
 JUMP_FORCE = -10
-POWER_UP_DURATION = 5 * 60  # 5 seconds (60 frames per second)
+POWER_UP_DURATION = 300  # 5 seconds at 60 FPS
 
 # Power-up durations
 SPEED_POWER_DURATION = 5 * 60  # 5 seconds for speed boost
-GOLDEN_POWER_DURATION = 5 * 60  # 5 seconds for black bug immunity
+GOLDEN_POWER_DURATION = 300  # 5 seconds at 60 FPS
 
 # Colors
 WHITE = (255, 255, 255)
@@ -37,11 +37,9 @@ SPEED_THRESHOLD_2 = 50
 SPEED_THRESHOLD_3 = 100
 SPEED_THRESHOLD_4 = 150
 
-# Speed multipliers for each threshold
-SPEED_MULTIPLIER_1 = 1.2
-SPEED_MULTIPLIER_2 = 1.5
-SPEED_MULTIPLIER_3 = 1.8
-SPEED_MULTIPLIER_4 = 2.0
+# Speed boost multiplier - set to 1.7 for better control while still providing
+# a meaningful speed advantage. Previous value of 2.0 was too difficult to control.
+SPEED_MULTIPLIER = 1.7
 
 # Add with other bug constants
 BLACK_BUG_SPEED = 4

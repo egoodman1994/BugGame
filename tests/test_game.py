@@ -3,7 +3,7 @@ import pygame
 from src.game import Game
 from src.sprites.bug import Bug
 from src.utils.constants import (SPEED_POWER_DURATION, GOLDEN_POWER_DURATION,
-                               WIDTH, HEIGHT, BLACK_BUG_SPAWN_THRESHOLD)
+                               WIDTH, HEIGHT, BLACK_BUG_SPAWN_THRESHOLD, SPEED_MULTIPLIER, BASE_PLAYER_SPEED)
 
 @pytest.fixture
 def game():
@@ -36,6 +36,7 @@ def test_power_up_timers(game):
     # Set initial values
     game.speed_boost_timer = initial_speed_timer
     game.golden_power_timer = initial_golden_timer
+    game.player.speed = BASE_PLAYER_SPEED  # Ensure player has base speed
     
     # Update should decrease timers
     game.handle_normal_game_update()
@@ -43,6 +44,7 @@ def test_power_up_timers(game):
     # Check that timers decreased by 1
     assert game.speed_boost_timer == initial_speed_timer - 1
     assert game.golden_power_timer == initial_golden_timer - 1
+    assert game.player.speed == BASE_PLAYER_SPEED * SPEED_MULTIPLIER  # Check speed boost applied
 
 def test_score_system(game):
     """Test scoring mechanics"""
@@ -58,6 +60,8 @@ def test_score_system(game):
 
 def test_power_ups(game):
     """Test power-up mechanics"""
+    initial_speed = game.player.speed
+    
     # Test speed boost
     power_bug = Bug("power")
     game.power_bug = power_bug
@@ -65,7 +69,12 @@ def test_power_ups(game):
     power_bug.rect.x = game.player.rect.x
     power_bug.rect.y = game.player.rect.y
     game.handle_other_collisions()
-    assert game.speed_boost_timer == SPEED_POWER_DURATION
+    
+    # Check that speed is increased by the correct multiplier
+    assert game.player.speed == pytest.approx(initial_speed * SPEED_MULTIPLIER), \
+        "Speed boost should multiply player speed by SPEED_MULTIPLIER (1.7)"
+    assert game.speed_boost_timer == SPEED_POWER_DURATION, \
+        "Speed boost timer should be set to SPEED_POWER_DURATION"
 
 def test_game_over(game):
     """Test game over conditions"""
